@@ -311,8 +311,13 @@ def not_found(error):
     return render_template('404.html', theme=theme), 404
 
 
-if __name__ == '__main__':
-    with app.app_context():
+# Инициализация БД при первом запуске
+with app.app_context():
+    try:
         init_db()
+    except Exception as e:
+        print(f"Ошибка инициализации БД: {e}")
+
+if __name__ == '__main__':
     app.run(debug=True)
 
