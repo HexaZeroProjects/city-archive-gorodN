@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Вход в систему - Городской архив обращений граждан{% endblock %}
+
+{% block content %}
+<section>
+    <h2>Вход в систему</h2>
+    <p>Для доступа к архиву обращений необходимо войти в систему.</p>
+    
+    <form method="POST" action="{{ url_for('login') }}" class="login-form">
+        <div class="form-group">
+            <label for="username">Имя пользователя:</label>
+            <input type="text" id="username" name="username" required autofocus>
+        </div>
+        
+        <div class="form-group">
+            <label for="password">Пароль:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        
+        <div class="form-group">
+            <button type="submit" class="submit-btn">Войти</button>
+        </div>
+    </form>
+</section>
+{% endblock %}
+

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}{% if news_item %}Редактирование новости{% else %}Создание новости{% endif %} - Городской архив обращений граждан{% endblock %}
+
+{% block content %}
+<section>
+    <h2>{% if news_item %}Редактирование новости{% else %}Создание новости{% endif %}</h2>
+    
+    <form method="POST" action="{% if news_item %}{{ url_for('admin_news_edit', news_id=news_item.id) }}{% else %}{{ url_for('admin_news_create') }}{% endif %}" class="filter-form">
+        <div class="form-group">
+            <label for="title">Заголовок новости:</label>
+            <input type="text" id="title" name="title" value="{% if news_item %}{{ news_item.title }}{% endif %}" required maxlength="200">
+        </div>
+        
+        <div class="form-group">
+            <label for="content">Содержание новости:</label>
+            <textarea id="content" name="content" rows="10" required>{% if news_item %}{{ news_item.content }}{% endif %}</textarea>
+        </div>
+        
+        <div class="form-group">
+            <button type="submit" class="submit-btn">{% if news_item %}Сохранить изменения{% else %}Создать новость{% endif %}</button>
+            <a href="{{ url_for('admin_news_list') }}" class="cancel-link" style="margin-left: 15px;">Отмена</a>
+        </div>
+    </form>
+</section>
+{% endblock %}
+

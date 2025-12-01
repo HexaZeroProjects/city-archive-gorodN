@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Виды обращений граждан - Городской архив обращений граждан{% endblock %}
+
+{% block content %}
+<section>
+    <h2>Виды обращений граждан</h2>
+    <p>В городской архив обращений граждан администрации города N поступают обращения граждан по различным вопросам жизнедеятельности города. Ниже представлен перечень категорий обращений, систематизированных в соответствии с предметной областью.</p>
+    
+    <div class="categories-list">
+        {% for category in categories %}
+        <article class="category-item">
+            <h3>{{ category.name }}</h3>
+            {% if category.description %}
+            <p>{{ category.description }}</p>
+            {% endif %}
+        </article>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
+

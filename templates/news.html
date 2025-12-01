@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Новости архива - Городской архив обращений граждан{% endblock %}
+
+{% block content %}
+<section>
+    <h2>Новости архива</h2>
+    <p>На данной странице размещена актуальная информация о деятельности городского архива обращений граждан администрации города N.</p>
+    
+    {% if news_list %}
+        {% for news_item in news_list %}
+        <article class="news-item">
+            <h3>{{ news_item.title }}</h3>
+            <p class="news-date">Дата публикации: {{ news_item.created_at.strftime('%d.%m.%Y %H:%M') }}</p>
+            <div class="news-content">
+                <p>{{ news_item.content }}</p>
+            </div>
+        </article>
+        {% endfor %}
+    {% else %}
+        <p class="no-results">Новости отсутствуют.</p>
+    {% endif %}
+</section>
+{% endblock %}
+

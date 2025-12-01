@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Городской архив обращений граждан администрации города N. Систематизация, учет и хранение обращений граждан.">
+    <title>{% block title %}Городской архив обращений граждан администрации города N{% endblock %}</title>
+    {% if theme == 'accessible' %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/accessible.css') }}">
+    {% else %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/normal.css') }}">
+    {% endif %}
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Городской архив обращений граждан</h1>
+            <p class="subtitle">Администрация города N</p>
+            <nav class="theme-switcher" role="navigation" aria-label="Переключение версии сайта">
+                {% set base_url = request.url.split('?')[0] %}
+                {% set query_parts = [] %}
+                {% for key, value in request.args.items() %}
+                    {% if key != 'theme' %}
+                        {% set _ = query_parts.append(key + '=' + value) %}
+                    {% endif %}
+                {% endfor %}
+                {% set _ = query_parts.append('theme=normal') %}
+                {% set normal_url = base_url + '?' + query_parts|join('&') %}
+                <a href="{{ normal_url }}" class="theme-link" aria-label="Переключить на обычную версию сайта">Обычная версия</a>
+                <span class="separator" aria-hidden="true">|</span>
+                {% set query_parts = [] %}
+                {% for key, value in request.args.items() %}
+                    {% if key != 'theme' %}
+                        {% set _ = query_parts.append(key + '=' + value) %}
+                    {% endif %}
+                {% endfor %}
+                {% set _ = query_parts.append('theme=accessible') %}
+                {% set accessible_url = base_url + '?' + query_parts|join('&') %}
+                <a href="{{ accessible_url }}" class="theme-link theme-link-accessible" aria-label="Переключить на версию для слабовидящих">Версия для слабовидящих</a>
+            </nav>
+        </div>
+    </header>
+    
+    <nav class="main-nav" role="navigation" aria-label="Основная навигация">
+        <div class="container">
+            <ul>
+                <li><a href="{{ url_for('index') }}">Главная</a></li>
+                <li><a href="{{ url_for('news') }}">Новости</a></li>
+                <li><a href="{{ url_for('types') }}">Виды обращений</a></li>
+                <li><a href="{{ url_for('storage') }}">Организация хранения</a></li>
+                <li><a href="{{ url_for('appeals') }}">Архив обращений</a></li>
+                <li><a href="{{ url_for('contacts') }}">Контакты</a></li>
+                {% if current_user.is_authenticated %}
+                    {% if current_user.is_admin %}
+                    <li><a href="{{ url_for('admin_news_list') }}">Управление новостями</a></li>
+                    {% endif %}
+                <li><a href="{{ url_for('logout') }}">Выход ({{ current_user.username }})</a></li>
+                {% else %}
+                <li><a href="{{ url_for('login') }}">Вход</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    
+    <main>
+        <div class="container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">
+                            <p>{{ message }}</p>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Администрация города N. Все права защищены.</p>
+            <p>Городской архив обращений граждан</p>
+        </div>
+    </footer>
+</body>
+</html>
+

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Архив обращений - Городской архив обращений граждан{% endblock %}
+
+{% block content %}
+<section>
+    <h2>Архив обращений</h2>
+    <p>На данной странице представлена возможность поиска и просмотра обращений граждан, хранящихся в архиве. Для формирования списка обращений используйте форму фильтрации ниже.</p>
+    
+    <form method="GET" action="{{ url_for('appeals') }}" class="filter-form" role="search" aria-label="Форма фильтрации обращений">
+        <fieldset>
+            <legend>Параметры фильтрации</legend>
+            
+            <div class="form-group">
+                <label for="date_from">Дата обращения с:</label>
+                <input type="date" id="date_from" name="date_from" value="{{ date_from }}">
+            </div>
+            
+            <div class="form-group">
+                <label for="date_to">Дата обращения по:</label>
+                <input type="date" id="date_to" name="date_to" value="{{ date_to }}">
+            </div>
+            
+            <div class="form-group">
+                <label for="category_id">Категория обращения:</label>
+                <select id="category_id" name="category_id">
+                    <option value="all" {% if selected_category == 'all' %}selected{% endif %}>Все категории</option>
+                    {% for category in categories %}
+                    <option value="{{ category.id }}" {% if selected_category == category.id|string %}selected{% endif %}>{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="status">Статус обращения:</label>
+                <select id="status" name="status">
+                    <option value="all" {% if selected_status == 'all' %}selected{% endif %}>Все статусы</option>
+                    {% for status in statuses %}
+                    <option value="{{ status }}" {% if selected_status == status %}selected{% endif %}>{{ status }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <button type="submit" class="submit-btn" aria-label="Применить фильтры и показать список обращений">Скачать список</button>
+            </div>
+        </fieldset>
+    </form>
+    
+    {% if appeals %}
+    <h3>Результаты поиска</h3>
+    <p>Найдено обращений: {{ appeals|length }}</p>
+    
+    <table class="appeals-table" role="table" aria-label="Таблица обращений граждан">
+        <thead>
+            <tr>
+                <th scope="col">Тип обращения</th>
+                <th scope="col">Тема обращения</th>
+                <th scope="col">Дата обращения</th>
+                <th scope="col">Регистрационный номер</th>
+                <th scope="col">Статус обращения</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for appeal in appeals %}
+            <tr>
+                <td>{{ appeal.category.name }}</td>
+                <td>{{ appeal.subject }}</td>
+                <td>{{ appeal.date.strftime('%d.%m.%Y') }}</td>
+                <td>{{ appeal.register_number }}</td>
+                <td>{{ appeal.status }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="no-results">По заданным критериям обращения не найдены.</p>
+    {% endif %}
+</section>
+{% endblock %}
+
